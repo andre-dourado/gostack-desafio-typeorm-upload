@@ -1,4 +1,4 @@
-import { getRepository } from 'typeorm';
+import { getRepository, getCustomRepository } from 'typeorm';
 import AppError from '../errors/AppError';
 
 import Transaction from '../models/Transaction';
@@ -21,23 +21,23 @@ class CreateTransactionService {
   }: Request): Promise<Transaction> {
     const categoryRepository = getRepository(Category);
 
-    let checkCategoryExists = await categoryRepository.findOne({
+    let transactionCategory = await categoryRepository.findOne({
       where: { title: category },
     });
 
-    if (!checkCategoryExists) {
+    if (!transactionCategory) {
       const categoryRet = categoryRepository.create({
         title: category,
       });
 
-      checkCategoryExists = await categoryRepository.save(categoryRet);
+      transactionCategory = await categoryRepository.save(categoryRet);
     }
 
-    const transactionsRepository = new TransactionsRepository();
+    const transactionsRepository = getCustomRepository(TransactionsRepository);
 
-    const balance = await transactionsRepository.getBalance();
+    const { total } = await transactionsRepository.getBalance();
 
-    if (type === 'outcome' && balance.total < value) {
+    if (type === 'outcome' && total < value) {
       throw new AppError('Transaction without a valid balance');
     }
 
@@ -47,7 +47,7 @@ class CreateTransactionService {
       title,
       value,
       type,
-      category_id: checkCategoryExists?.id,
+      category: transactionCategory,
     });
 
     await newTransactionRepository.save(transaction);
