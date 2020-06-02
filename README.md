@@ -1,7 +1,7 @@
 <img alt="GoStack" src="https://storage.googleapis.com/golden-wind/bootcamp-gostack/header-desafios.png" />
 
 <h3 align="center">
-  Desafio 06: Banco de dados e upload de arquivos no Node.js
+  Desafio 05: Banco de dados e upload de arquivos no Node.js
 </h3>
 
 Nesse desafio foi continuado o desenvolvimento da aplicação de gestão de transações, treinando o que foi aprendido até agora no Node.js junto e TypeScript, mas dessa vez incluindo o uso de banco de dados com o TypeORM e envio de arquivos com o Multer!
